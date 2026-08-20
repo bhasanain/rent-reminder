@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>Rent Book</title>
+<link rel="manifest" href="./manifest.json" />
+<link rel="apple-touch-icon" href="./icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Rent Book" />
+<meta name="theme-color" content="#35543B" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper: #FAF6EC;
+    --paper-line: #E4DCC6;
+    --ink: #2B2620;
+    --ink-soft: #6B6252;
+    --green: #35543B;
+    --green-deep: #24392A;
+    --green-soft: #E4ECE3;
+    --rust: #A9482F;
+    --rust-soft: #F1E0D6;
+    --card: #FFFFFF;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--paper);
+    background-image: linear-gradient(var(--paper-line) 1px, transparent 1px);
+    background-size: 100% 2.6em;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 19px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap{ max-width: 560px; margin: 0 auto; padding: 32px 20px 80px; }
+  header{ margin-bottom: 28px; }
+  header .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 40px;
+    margin: 4px 0 6px;
+    color: var(--green-deep);
+  }
+  header p{ color: var(--ink-soft); margin:0; }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--paper-line);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: 0 1px 0 rgba(43,38,32,0.03);
+    margin-bottom: 22px;
+  }
+  .card h2{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 10px;
+  }
+  .card p{ margin: 0 0 6px; }
+  #notify-card{ border-color: var(--green); background: var(--green-soft); }
+  #notify-card h2{ color: var(--green-deep); }
+
+  label{
+    display:block;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .field{ margin-bottom: 18px; }
+  .hint{ font-size: 14px; color: var(--ink-soft); margin-top: 6px; }
+  input[type=text], input[type=number]{
+    width:100%;
+    font-family: inherit;
+    font-size: 19px;
+    padding: 14px 16px;
+    border: 2px solid var(--paper-line);
+    border-radius: 10px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  input:focus{ outline: 3px solid var(--green); outline-offset: 1px; border-color: var(--green); }
+  button{
+    font-family:'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 14px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary{ background: var(--green); color: white; width: 100%; margin-top: 8px; }
+  .btn-primary:hover{ background: var(--green-deep); }
+  .btn-primary:disabled{ opacity: 0.6; cursor: default; }
+
+  .renters-header{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom: 14px; }
+  .renters-header h2{ margin:0; }
+  .count{ font-family:'IBM Plex Mono', monospace; color: var(--ink-soft); font-size: 14px; }
+
+  .renter{
+    display:flex; align-items:center; gap:16px;
+    background: var(--card);
+    border: 1px solid var(--paper-line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .stamp{
+    flex: 0 0 auto; width: 54px; height: 54px; border-radius: 50%;
+    border: 2px solid var(--rust); color: var(--rust); background: var(--rust-soft);
+    font-family:'IBM Plex Mono', monospace; font-weight: 600; font-size: 20px;
+    display:flex; align-items:center; justify-content:center; transform: rotate(-6deg);
+  }
+  .renter-info{ flex: 1 1 auto; min-width:0; }
+  .renter-name{ font-weight:600; font-size: 18px; }
+  .renter-sub{ color: var(--ink-soft); font-size: 14px; }
+  .remove-btn{
+    flex: 0 0 auto; background: transparent; color: var(--ink-soft);
+    border: 1px solid var(--paper-line); font-weight: 600; font-size: 14px; padding: 8px 12px;
+  }
+  .remove-btn:hover{ color: var(--rust); border-color: var(--rust); }
+
+  .empty{ color: var(--ink-soft); text-align:center; padding: 24px 8px; }
+  .status{ font-size: 14px; margin-top: 10px; min-height: 18px; }
+  .status.error{ color: var(--rust); }
+  .status.ok{ color: var(--green); }
+
+  footer{ text-align:center; color: var(--ink-soft); font-size: 13px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Rent Book</div>
+    <h1>Who's renting, and when's it due</h1>
+    <p>Add a renter once — you'll get a reminder the day their rent is due.</p>
+  </header>
+
+  <section class="card" id="notify-card">
+    <p>Checking notification status&hellip;</p>
+  </section>
+
+  <section class="card">
+    <h2>Add a renter</h2>
+    <form id="add-form">
+      <div class="field">
+        <label for="name">Renter's name</label>
+        <input type="text" id="name" placeholder="e.g. Maria Alvarez" required />
+      </div>
+      <div class="field">
+        <label for="due-day">Day of the month rent is due</label>
+        <input type="number" id="due-day" min="1" max="31" placeholder="e.g. 1" required />
+        <div class="hint">Enter a number from 1–31.</div>
+      </div>
+      <button type="submit" class="btn-primary" id="submit-btn">Add renter</button>
+      <div class="status" id="form-status"></div>
+    </form>
+  </section>
+
+  <section>
+    <div class="renters-header">
+      <h2 style="font-family:'Fraunces',serif;font-weight:600;font-size:22px;">Your renters</h2>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="renter-list"></div>
+  </section>
+
+  <footer>Rent Book &middot; runs quietly in the background</footer>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, deleteDoc, doc, getDocs, setDoc, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ---- Fill these in after you create your Firebase project ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3jyL-jdVuwCrCQu_tIl_noz88N_FnZoE",
+    authDomain: "rent-reminder-81c38.firebaseapp.com",
+    projectId: "rent-reminder-81c38",
+    storageBucket: "rent-reminder-81c38.firebasestorage.app",
+    messagingSenderId: "197349732841",
+    appId: "1:197349732841:web:82eae4f5bbd883e59edb78"
+  };
+  // This public key is already generated for you — leave it as is.
+  // (Its matching private key goes into a GitHub secret later, never in this file.)
+  const VAPID_PUBLIC_KEY = "BEkk3beWH3ruRaIdJwNID_ZFz92mSc2-Yun93sCXyUwBRHfPKAu40_DiYnl7v7Mx1tKmYKFUwiDqbaPVm2opXUk";
+  // ----------------------------------------------------------------
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const rentersCol = collection(db, 'renters');
+  const subsCol = collection(db, 'pushSubscriptions');
+
+  const listEl = document.getElementById('renter-list');
+  const countEl = document.getElementById('count');
+  const formEl = document.getElementById('add-form');
+  const statusEl = document.getElementById('form-status');
+  const submitBtn = document.getElementById('submit-btn');
+  const notifyCard = document.getElementById('notify-card');
+
+  function ordinal(n){
+    const s = ["th","st","nd","rd"], v = n % 100;
+    return n + (s[(v-20)%10] || s[v] || s[0]);
+  }
+
+  // ---------- Renters ----------
+
+  async function loadRenters() {
+    listEl.innerHTML = '<div class="empty">Loading&hellip;</div>';
+    try {
+      const q = query(rentersCol, orderBy('dueDay', 'asc'));
+      const snap = await getDocs(q);
+      const renters = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderRenters(renters);
+    } catch (err) {
+      listEl.innerHTML = `<div class="empty">Couldn't load renters. Check that the Firebase details at the top of the page are filled in.</div>`;
+      console.error(err);
+    }
+  }
+
+  function renderRenters(renters) {
+    countEl.textContent = renters.length ? `${renters.length} renter${renters.length === 1 ? '' : 's'}` : '';
+    if (!renters.length) {
+      listEl.innerHTML = '<div class="empty">No renters yet — add your first one above.</div>';
+      return;
+    }
+    listEl.innerHTML = '';
+    renters.forEach(r => {
+      const row = document.createElement('div');
+      row.className = 'renter';
+      row.innerHTML = `
+        <div class="stamp">${r.dueDay}</div>
+        <div class="renter-info">
+          <div class="renter-name"></div>
+          <div class="renter-sub">Rent due the ${ordinal(r.dueDay)} of each month</div>
+        </div>
+        <button class="remove-btn" data-id="${r.id}">Remove</button>
+      `;
+      row.querySelector('.renter-name').textContent = r.name;
+      row.querySelector('.remove-btn').addEventListener('click', () => removeRenter(r.id));
+      listEl.appendChild(row);
+    });
+  }
+
+  async function removeRenter(id) {
+    if (!confirm('Remove this renter?')) return;
+    try {
+      await deleteDoc(doc(db, 'renters', id));
+      loadRenters();
+    } catch (err) {
+      alert("Couldn't remove that renter. Try again in a moment.");
+      console.error(err);
+    }
+  }
+
+  formEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const dueDay = parseInt(document.getElementById('due-day').value, 10);
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+
+    if (!name || !dueDay || dueDay < 1 || dueDay > 31) {
+      statusEl.textContent = 'Please enter a name and a day between 1 and 31.';
+      statusEl.classList.add('error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Adding…';
+    try {
+      await addDoc(rentersCol, { name, dueDay, createdAt: Date.now() });
+      formEl.reset();
+      statusEl.textContent = `${name} added.`;
+      statusEl.classList.add('ok');
+      loadRenters();
+    } catch (err) {
+      statusEl.textContent = "Couldn't add that renter. Check the Firebase details at the top of the page.";
+      statusEl.classList.add('error');
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Add renter';
+    }
+  });
+
+  // ---------- Push notifications ----------
+
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+  }
+
+  function arrayBufferToBase64(buffer) {
+    return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+  }
+
+  async function hashString(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function initNotifications() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+      notifyCard.innerHTML = `<h2>Reminders aren't supported here</h2><p>Open this page in Safari on iPhone, or Chrome on Android.</p>`;
+      return;
+    }
+
+    const reg = await navigator.serviceWorker.register('./sw.js');
+
+    if (!isStandalone()) {
+      notifyCard.innerHTML = `
+        <h2>Step 1: Add to Home Screen</h2>
+        <p>To get reminders, add this page to your Home Screen, then open it from there.</p>
+        <p class="hint">On iPhone: tap the Share button in Safari, then "Add to Home Screen."</p>
+      `;
+      return;
+    }
+
+    if (Notification.permission === 'denied') {
+      notifyCard.innerHTML = `
+        <h2>Reminders are turned off</h2>
+        <p class="hint">Turn them back on in iPhone Settings → Notifications → Rent Book.</p>
+      `;
+      return;
+    }
+
+    const existingSub = await reg.pushManager.getSubscription();
+    if (Notification.permission === 'granted' && existingSub) {
+      notifyCard.innerHTML = `<h2>&#10003; Reminders are on</h2><p class="hint">You'll get a notification the day someone's rent is due.</p>`;
+      return;
+    }
+
+    notifyCard.innerHTML = `
+      <h2>Step 2: Turn on reminders</h2>
+      <p>Get a notification the day someone's rent is due.</p>
+      <button class="btn-primary" id="enable-btn">Turn on reminders</button>
+      <div class="status" id="enable-status"></div>
+    `;
+    document.getElementById('enable-btn').addEventListener('click', () => enableNotifications(reg));
+  }
+
+  async function enableNotifications(reg) {
+    const enableStatus = document.getElementById('enable-status');
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      enableStatus.textContent = 'Reminders need to be allowed to turn on.';
+      enableStatus.className = 'status error';
+      return;
+    }
+    try {
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+      const subId = await hashString(sub.endpoint);
+      await setDoc(doc(subsCol, subId), {
+        endpoint: sub.endpoint,
+        p256dh: arrayBufferToBase64(sub.getKey('p256dh')),
+        auth: arrayBufferToBase64(sub.getKey('auth')),
+      });
+      initNotifications();
+    } catch (err) {
+      enableStatus.textContent = "Couldn't turn on reminders. Check the Firebase details at the top of the page.";
+      enableStatus.className = 'status error';
+      console.error(err);
+    }
+  }
+
+  loadRenters();
+  initNotifications();
+</script>
+</body>
+</html>

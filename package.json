@@ -1,0 +1,10 @@
+{
+  "name": "rent-book-check",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Daily rent-due check and push notification sender for Rent Book.",
+  "dependencies": {
+    "web-push": "^3.6.7",
+    "firebase-admin": "^12.1.0"
+  }
+}
