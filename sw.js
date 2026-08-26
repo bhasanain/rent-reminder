@@ -10,14 +10,14 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  let data = { title: 'Rent Book', body: 'Rent is due today.' };
+  let data = { title: 'دفتر الإيجار', body: 'حان اليوم موعد استحقاق الإيجار.' };
   try {
     if (event.data) data = event.data.json();
   } catch (e) {
     // fall back to default text above
   }
   event.waitUntil(
-    self.registration.showNotification(data.title || 'Rent Book', {
+    self.registration.showNotification(data.title || 'دفتر الإيجار', {
       body: data.body || '',
       icon: 'icon-192.png',
       badge: 'icon-192.png',
