@@ -1,7 +1,9 @@
 {
-  "name": "Rent Book",
-  "short_name": "Rent Book",
-  "description": "Track renters and get reminded when rent is due.",
+  "name": "دفتر الإيجار",
+  "short_name": "دفتر الإيجار",
+  "description": "تتبع المستأجرين واحصل على تذكير عند استحقاق الإيجار.",
+  "lang": "ar",
+  "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
