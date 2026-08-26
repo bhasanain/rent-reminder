@@ -75,8 +75,8 @@ async function main() {
 
   for (const renter of dueToday) {
     const payload = JSON.stringify({
-      title: 'Rent Book',
-      body: `${renter.name}'s rent is due today.`,
+      title: 'دفتر الإيجار',
+      body: `حان اليوم موعد استحقاق إيجار ${renter.name}.`,
     });
 
     for (const sub of subscriptions) {
